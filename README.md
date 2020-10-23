@@ -10,4 +10,6 @@ cargo watch
 
 '''
 cargo watch -x test
+// run with nocapture flag for particular test
+cargo watch "test -- --nocapture elements_of_programming_tests"
 '''
