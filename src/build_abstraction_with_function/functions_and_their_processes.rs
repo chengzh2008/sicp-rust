@@ -181,6 +181,128 @@ fn pascal_iter(m: usize, n: usize) -> i32 {
   helper(m, n, 2, vec![1, 1])
 }
 
+fn cube(x: f32) -> f32 {
+  x * x * x
+}
+
+fn p(x: f32) -> f32 {
+  3.0 * x - 4.0 * cube(x)
+}
+
+fn sine(angle: f32) -> f32 {
+  if f32::abs(angle) <= 0.1 {
+    angle
+  } else {
+    p(sine(angle / 3.0))
+  }
+}
+
+fn expt(b: i32, n: i32) -> i32 {
+  if n == 0 {
+    1
+  } else {
+    b * expt(b, n - 1)
+  }
+}
+
+fn expt_iter(b: i32, n: i32) -> i32 {
+  fn helper(c: i32, p: i32, b: i32, n: i32) -> i32 {
+    if c == n {
+      p
+    } else {
+      helper(c + 1, b * p, b, n)
+    }
+  }
+  helper(0, 1, b, n)
+}
+
+fn is_even(n: i32) -> bool {
+  n % 2 == 0
+}
+
+fn square(i: i32) -> i32 {
+  i * i
+}
+
+fn half(i: i32) -> i32 {
+  i / 2
+}
+
+fn fast_expt(b: i32, n: i32) -> i32 {
+  if n == 1 {
+    b
+  } else {
+    if is_even(n) {
+      square(fast_expt(b, half(n)))
+    } else {
+      b * fast_expt(b, n - 1)
+    }
+  }
+}
+
+fn fast_expt_iter(b: i32, n: i32) -> i32 {
+  fn helper(p: i32, b: i32, n: i32) -> i32 {
+    if n == 0 {
+      p
+    } else {
+      if is_even(n) {
+        helper(p, square(b), half(n))
+      } else {
+        helper(b * p, b, n - 1)
+      }
+    }
+  }
+  helper(1, b, n)
+}
+
+fn double(x: i32) -> i32 {
+  x * 2
+}
+
+fn times(a: i32, b: i32) -> i32 {
+  if b == 0 {
+    0
+  } else {
+    a + times(a, b - 1)
+  }
+}
+
+fn times_iter(a: i32, b: i32) -> i32 {
+  fn helper(s: i32, a: i32, b: i32) -> i32 {
+    if b == 0 {
+      s
+    } else {
+      if is_even(b) {
+        helper(s, double(a), half(b))
+      } else {
+        helper(s + a, a, b - 1)
+      }
+    }
+  }
+  helper(0, a, b)
+}
+
+fn fast_fib(n: i32) -> i32 {
+  fn helper(a: i32, b: i32, p: i32, q: i32, count: i32) -> i32 {
+    if count == 0 {
+      b
+    } else {
+      if is_even(count) {
+        helper(
+          a,
+          b,
+          square(p) + square(q),
+          2 * p * q + square(q),
+          half(count),
+        )
+      } else {
+        helper(b * q + a * q + a * p, b * p + a * q, p, q, count - 1)
+      }
+    }
+  }
+  helper(1, 0, 0, 1, n)
+}
+
 #[test]
 fn functions_and_their_processes_tests() {
   println!("{}", factorial(5));
@@ -204,4 +326,11 @@ fn functions_and_their_processes_tests() {
   println!("{}", pascal_iter(3, 2));
   println!("{}", pascal(4, 2));
   println!("{}", pascal_iter(4, 2));
+  println!("{}", expt(4, 2));
+  println!("{}", expt_iter(4, 2));
+  println!("{}", fast_expt(4, 2));
+  println!("{}", fast_expt_iter(4, 2));
+  println!("{}", times(4, 2));
+  println!("{}", times_iter(4, 2));
+  println!("{}", fast_fib(5));
 }
