@@ -61,6 +61,126 @@ fn h(n: i32) -> i32 {
   ackermann(2, n)
 }
 
+fn fac(n: i32) -> i32 {
+  if n == 1 {
+    1
+  } else {
+    n * fac(n - 1)
+  }
+}
+
+fn fib(n: i32) -> i32 {
+  if n < 2 {
+    n
+  } else {
+    fib(n - 2) + fib(n - 1)
+  }
+}
+
+// rust function can not access local variable
+fn fib_iter(n: i32) -> i32 {
+  fn helper(a: i32, b: i32, i: i32, n: i32) -> i32 {
+    if i == n {
+      b
+    } else {
+      helper(b, a + b, i + 1, n)
+    }
+  }
+  helper(0, 1, 1, n)
+}
+
+/*
+The number of ways to change amount a using n kinds of coins equals
+- the number of ways to change amount a using all but the the first kind of coin, plus
+- the number of ways to change amount (a - d) using all n kinds of coins where d is the value of the first kind of coin
+*/
+
+fn count_change(amount: i32) -> i32 {
+  cc(amount, 6)
+}
+
+fn cc(amount: i32, coin_kind: i8) -> i32 {
+  if amount == 0 {
+    1
+  } else {
+    if amount < 0 || coin_kind == 0 {
+      0
+    } else {
+      cc(amount, coin_kind - 1) + cc(amount - get_value(coin_kind), coin_kind)
+    }
+  }
+}
+
+fn get_value(coin_kind: i8) -> i32 {
+  match coin_kind {
+    6 => 100,
+    5 => 50,
+    4 => 25,
+    3 => 10,
+    2 => 5,
+    1 => 1,
+    _ => 0,
+  }
+}
+
+/*
+Exercise 1.11 A function f is defined by the rule that f(n)=n if n<3 and f(n)=f(n−1)+2f(n−2)+3f(n−3) if n≥3.
+Write a JavaScript function that computes f by means of a recursive process. Write a function that computes f
+by means of an iterative process.
+*/
+fn fn3(n: i32) -> i32 {
+  if n < 3 {
+    n
+  } else {
+    fn3(n - 1) + 2 * fn3(n - 2) + 3 * fn3(n - 3)
+  }
+}
+
+fn fn3_iter(n: i32) -> i32 {
+  fn helper(p3: i32, p2: i32, p1: i32, k: i32, n: i32) -> i32 {
+    if k == n {
+      p1
+    } else {
+      helper(p2, p1, 3 * p3 + 2 * p2 + p1, k + 1, n)
+    }
+  }
+  return helper(0, 1, 2, 2, n);
+}
+
+// m >= n
+fn pascal(m: i32, n: i32) -> i32 {
+  if n == 0 || m == n {
+    1
+  } else {
+    pascal(m - 1, n - 1) + pascal(m - 1, n)
+  }
+}
+
+// pascal triangle with interative process
+fn pascal_iter(m: usize, n: usize) -> i32 {
+  fn helper(m: usize, n: usize, l: usize, pre_vec: Vec<i32>) -> i32 {
+    if m == 0 || m == n {
+      1
+    } else {
+      if l == m {
+        pre_vec[n - 1] + pre_vec[n]
+      } else {
+        let mut new_vec = vec![];
+        for (i, _) in pre_vec.iter().enumerate() {
+          if i == 0 {
+            new_vec.push(1);
+          } else {
+            new_vec.push(pre_vec[i - 1] + pre_vec[i])
+          }
+        }
+        new_vec.push(1);
+        helper(m, n, l + 1, new_vec.to_vec())
+      }
+    }
+  }
+  helper(m, n, 2, vec![1, 1])
+}
+
 #[test]
 fn functions_and_their_processes_tests() {
   println!("{}", factorial(5));
@@ -71,5 +191,17 @@ fn functions_and_their_processes_tests() {
   println!("{}", ackermann(3, 3));
   println!("{}", f(3));
   println!("{}", g(3));
-  println!("{}", h(3));
+  println!("{}", h(4));
+  println!("{}", fac(5));
+  println!("{}", fib(5));
+  println!("{}", fib_iter(5));
+  println!("{}", count_change(100));
+  println!("{}", fn3(3));
+  println!("{}", fn3(4));
+  println!("{}", fn3_iter(3));
+  println!("{}", fn3_iter(4));
+  println!("{}", pascal(3, 2));
+  println!("{}", pascal_iter(3, 2));
+  println!("{}", pascal(4, 2));
+  println!("{}", pascal_iter(4, 2));
 }
