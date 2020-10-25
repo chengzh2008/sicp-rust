@@ -1,3 +1,5 @@
+use rand::Rng;
+
 fn factorial(n: i32) -> i32 {
   if n == 1 {
     1
@@ -303,6 +305,71 @@ fn fast_fib(n: i32) -> i32 {
   helper(1, 0, 0, 1, n)
 }
 
+fn gcd(a: i32, b: i32) -> i32 {
+  if b == 0 {
+    a
+  } else {
+    gcd(b, a % b)
+  }
+}
+
+fn devides(test_divisor: i32, n: i32) -> bool {
+  n % test_divisor == 0
+}
+
+fn find_divisor(n: i32, test_divisor: i32) -> i32 {
+  if square(test_divisor) > n {
+    n
+  } else {
+    if devides(test_divisor, n) {
+      test_divisor
+    } else {
+      find_divisor(n, test_divisor + 1)
+    }
+  }
+}
+
+fn smallest_divisor(n: i32) -> i32 {
+  find_divisor(n, 2)
+}
+
+fn is_prime(n: i32) -> bool {
+  smallest_divisor(n) == n
+}
+
+fn expmod(base: i32, exp: i32, m: i32) -> i32 {
+  if exp == 0 {
+    1
+  } else {
+    if is_even(exp) {
+      expmod(square(base), half(exp), m) % m
+    } else {
+      base * expmod(base, exp - 1, m) % m
+    }
+  }
+}
+
+// Fermat test
+fn fermat_test(n: i32) -> bool {
+  fn try_it(a: i32, n: i32) -> bool {
+    expmod(a, n, n) == a
+  }
+  let mut rng = rand::thread_rng();
+  try_it(rng.gen_range(2, n), n)
+}
+
+fn fast_is_prime(n: i32, times: i32) -> bool {
+  if times == 0 {
+    true
+  } else {
+    if fermat_test(n) {
+      fast_is_prime(n, times - 1)
+    } else {
+      false
+    }
+  }
+}
+
 #[test]
 fn functions_and_their_processes_tests() {
   println!("{}", factorial(5));
@@ -333,4 +400,8 @@ fn functions_and_their_processes_tests() {
   println!("{}", times(4, 2));
   println!("{}", times_iter(4, 2));
   println!("{}", fast_fib(5));
+  println!("{}", gcd(2, 5));
+  println!("{}", smallest_divisor(45));
+  println!("{}", is_prime(5));
+  println!("{}", fermat_test(5));
 }
