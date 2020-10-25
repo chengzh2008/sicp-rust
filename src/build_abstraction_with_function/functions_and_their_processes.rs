@@ -1,4 +1,5 @@
 use rand::Rng;
+use std::time::SystemTime;
 
 fn factorial(n: i32) -> i32 {
   if n == 1 {
@@ -370,6 +371,29 @@ fn fast_is_prime(n: i32, times: i32) -> bool {
   }
 }
 
+fn timed_prime_test(n: i32) -> bool {
+  println!(" start testing: {}", n);
+  let now = SystemTime::now();
+  start_prime_test(n, now)
+}
+
+fn start_prime_test(n: i32, now: SystemTime) -> bool {
+  if is_prime(n) {
+    report_prime(now)
+  } else {
+    true
+  }
+}
+
+fn report_prime(now: SystemTime) -> bool {
+  println!(" *** ");
+  match now.elapsed() {
+    Ok(elapsed) => println!("Time used: {}", elapsed.as_secs() * 1000),
+    Err(e) => println!("Error: {:?}", e),
+  }
+  false
+}
+
 #[test]
 fn functions_and_their_processes_tests() {
   println!("{}", factorial(5));
@@ -404,4 +428,5 @@ fn functions_and_their_processes_tests() {
   println!("{}", smallest_divisor(45));
   println!("{}", is_prime(5));
   println!("{}", fermat_test(5));
+  println!("{}", timed_prime_test(16769023));
 }
