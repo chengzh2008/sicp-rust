@@ -1,7 +1,7 @@
 use rand::Rng;
-use std::time::SystemTime;
+use std::time::{SystemTime, UNIX_EPOCH};
 
-fn factorial(n: i32) -> i32 {
+pub fn factorial(n: i128) -> i128 {
   if n == 1 {
     1
   } else {
@@ -9,8 +9,8 @@ fn factorial(n: i32) -> i32 {
   }
 }
 
-fn fact_iter(n: i32) -> i32 {
-  fn helper(p: i32, c: i32, max_count: i32) -> i32 {
+pub fn fact_iter(n: i128) -> i128 {
+  fn helper(p: i128, c: i128, max_count: i128) -> i128 {
     if c > max_count {
       p
     } else {
@@ -20,15 +20,15 @@ fn fact_iter(n: i32) -> i32 {
   helper(1, 1, n)
 }
 
-fn inc(a: i32) -> i32 {
+pub fn inc(a: i128) -> i128 {
   a + 1
 }
 
-fn dec(a: i32) -> i32 {
+pub fn dec(a: i128) -> i128 {
   a - 1
 }
 
-fn plus(a: i32, b: i32) -> i32 {
+pub fn plus(a: i128, b: i128) -> i128 {
   if a == 0 {
     b
   } else {
@@ -36,7 +36,7 @@ fn plus(a: i32, b: i32) -> i32 {
   }
 }
 
-fn ackermann(a: i32, b: i32) -> i32 {
+pub fn ackermann(a: i128, b: i128) -> i128 {
   if b == 0 {
     0
   } else {
@@ -52,19 +52,19 @@ fn ackermann(a: i32, b: i32) -> i32 {
   }
 }
 
-fn f(n: i32) -> i32 {
+fn f(n: i128) -> i128 {
   ackermann(0, n)
 }
 
-fn g(n: i32) -> i32 {
+fn g(n: i128) -> i128 {
   ackermann(1, n)
 }
 
-fn h(n: i32) -> i32 {
+fn h(n: i128) -> i128 {
   ackermann(2, n)
 }
 
-fn fac(n: i32) -> i32 {
+pub fn fac(n: i128) -> i128 {
   if n == 1 {
     1
   } else {
@@ -72,7 +72,7 @@ fn fac(n: i32) -> i32 {
   }
 }
 
-fn fib(n: i32) -> i32 {
+pub fn fib(n: i128) -> i128 {
   if n < 2 {
     n
   } else {
@@ -81,8 +81,8 @@ fn fib(n: i32) -> i32 {
 }
 
 // rust function can not access local variable
-fn fib_iter(n: i32) -> i32 {
-  fn helper(a: i32, b: i32, i: i32, n: i32) -> i32 {
+pub fn fib_iter(n: i128) -> i128 {
+  fn helper(a: i128, b: i128, i: i128, n: i128) -> i128 {
     if i == n {
       b
     } else {
@@ -98,11 +98,11 @@ The number of ways to change amount a using n kinds of coins equals
 - the number of ways to change amount (a - d) using all n kinds of coins where d is the value of the first kind of coin
 */
 
-fn count_change(amount: i32) -> i32 {
+fn count_change(amount: i128) -> i128 {
   cc(amount, 6)
 }
 
-fn cc(amount: i32, coin_kind: i8) -> i32 {
+fn cc(amount: i128, coin_kind: i8) -> i128 {
   if amount == 0 {
     1
   } else {
@@ -114,7 +114,7 @@ fn cc(amount: i32, coin_kind: i8) -> i32 {
   }
 }
 
-fn get_value(coin_kind: i8) -> i32 {
+fn get_value(coin_kind: i8) -> i128 {
   match coin_kind {
     6 => 100,
     5 => 50,
@@ -131,7 +131,7 @@ Exercise 1.11 A function f is defined by the rule that f(n)=n if n<3 and f(n)=f(
 Write a JavaScript function that computes f by means of a recursive process. Write a function that computes f
 by means of an iterative process.
 */
-fn fn3(n: i32) -> i32 {
+fn fn3(n: i128) -> i128 {
   if n < 3 {
     n
   } else {
@@ -139,8 +139,8 @@ fn fn3(n: i32) -> i32 {
   }
 }
 
-fn fn3_iter(n: i32) -> i32 {
-  fn helper(p3: i32, p2: i32, p1: i32, k: i32, n: i32) -> i32 {
+fn fn3_iter(n: i128) -> i128 {
+  fn helper(p3: i128, p2: i128, p1: i128, k: i128, n: i128) -> i128 {
     if k == n {
       p1
     } else {
@@ -151,7 +151,7 @@ fn fn3_iter(n: i32) -> i32 {
 }
 
 // m >= n
-fn pascal(m: i32, n: i32) -> i32 {
+pub fn pascal(m: i128, n: i128) -> i128 {
   if n == 0 || m == n {
     1
   } else {
@@ -160,8 +160,8 @@ fn pascal(m: i32, n: i32) -> i32 {
 }
 
 // pascal triangle with interative process
-fn pascal_iter(m: usize, n: usize) -> i32 {
-  fn helper(m: usize, n: usize, l: usize, pre_vec: Vec<i32>) -> i32 {
+pub fn pascal_iter(m: usize, n: usize) -> i128 {
+  fn helper(m: usize, n: usize, l: usize, pre_vec: Vec<i128>) -> i128 {
     if m == 0 || m == n {
       1
     } else {
@@ -184,7 +184,7 @@ fn pascal_iter(m: usize, n: usize) -> i32 {
   helper(m, n, 2, vec![1, 1])
 }
 
-fn cube(x: f32) -> f32 {
+pub fn cube(x: f32) -> f32 {
   x * x * x
 }
 
@@ -192,7 +192,7 @@ fn p(x: f32) -> f32 {
   3.0 * x - 4.0 * cube(x)
 }
 
-fn sine(angle: f32) -> f32 {
+pub fn sine(angle: f32) -> f32 {
   if f32::abs(angle) <= 0.1 {
     angle
   } else {
@@ -200,7 +200,7 @@ fn sine(angle: f32) -> f32 {
   }
 }
 
-fn expt(b: i32, n: i32) -> i32 {
+pub fn expt(b: i128, n: i128) -> i128 {
   if n == 0 {
     1
   } else {
@@ -208,8 +208,8 @@ fn expt(b: i32, n: i32) -> i32 {
   }
 }
 
-fn expt_iter(b: i32, n: i32) -> i32 {
-  fn helper(c: i32, p: i32, b: i32, n: i32) -> i32 {
+pub fn expt_iter(b: i128, n: i128) -> i128 {
+  fn helper(c: i128, p: i128, b: i128, n: i128) -> i128 {
     if c == n {
       p
     } else {
@@ -219,19 +219,19 @@ fn expt_iter(b: i32, n: i32) -> i32 {
   helper(0, 1, b, n)
 }
 
-fn is_even(n: i32) -> bool {
+pub fn is_even(n: i128) -> bool {
   n % 2 == 0
 }
 
-fn square(i: i32) -> i32 {
+pub fn square(i: i128) -> i128 {
   i * i
 }
 
-fn half(i: i32) -> i32 {
+pub fn half(i: i128) -> i128 {
   i / 2
 }
 
-fn fast_expt(b: i32, n: i32) -> i32 {
+pub fn fast_expt(b: i128, n: i128) -> i128 {
   if n == 1 {
     b
   } else {
@@ -243,8 +243,8 @@ fn fast_expt(b: i32, n: i32) -> i32 {
   }
 }
 
-fn fast_expt_iter(b: i32, n: i32) -> i32 {
-  fn helper(p: i32, b: i32, n: i32) -> i32 {
+pub fn fast_expt_iter(b: i128, n: i128) -> i128 {
+  fn helper(p: i128, b: i128, n: i128) -> i128 {
     if n == 0 {
       p
     } else {
@@ -258,11 +258,11 @@ fn fast_expt_iter(b: i32, n: i32) -> i32 {
   helper(1, b, n)
 }
 
-fn double(x: i32) -> i32 {
+pub fn double(x: i128) -> i128 {
   x * 2
 }
 
-fn times(a: i32, b: i32) -> i32 {
+pub fn times(a: i128, b: i128) -> i128 {
   if b == 0 {
     0
   } else {
@@ -270,8 +270,8 @@ fn times(a: i32, b: i32) -> i32 {
   }
 }
 
-fn times_iter(a: i32, b: i32) -> i32 {
-  fn helper(s: i32, a: i32, b: i32) -> i32 {
+pub fn times_iter(a: i128, b: i128) -> i128 {
+  fn helper(s: i128, a: i128, b: i128) -> i128 {
     if b == 0 {
       s
     } else {
@@ -285,8 +285,8 @@ fn times_iter(a: i32, b: i32) -> i32 {
   helper(0, a, b)
 }
 
-fn fast_fib(n: i32) -> i32 {
-  fn helper(a: i32, b: i32, p: i32, q: i32, count: i32) -> i32 {
+pub fn fast_fib(n: i128) -> i128 {
+  fn helper(a: i128, b: i128, p: i128, q: i128, count: i128) -> i128 {
     if count == 0 {
       b
     } else {
@@ -306,7 +306,7 @@ fn fast_fib(n: i32) -> i32 {
   helper(1, 0, 0, 1, n)
 }
 
-fn gcd(a: i32, b: i32) -> i32 {
+pub fn gcd(a: i128, b: i128) -> i128 {
   if b == 0 {
     a
   } else {
@@ -314,11 +314,11 @@ fn gcd(a: i32, b: i32) -> i32 {
   }
 }
 
-fn devides(test_divisor: i32, n: i32) -> bool {
+pub fn devides(test_divisor: i128, n: i128) -> bool {
   n % test_divisor == 0
 }
 
-fn find_divisor(n: i32, test_divisor: i32) -> i32 {
+fn find_divisor(n: i128, test_divisor: i128) -> i128 {
   if square(test_divisor) > n {
     n
   } else {
@@ -330,15 +330,15 @@ fn find_divisor(n: i32, test_divisor: i32) -> i32 {
   }
 }
 
-fn smallest_divisor(n: i32) -> i32 {
+pub fn smallest_divisor(n: i128) -> i128 {
   find_divisor(n, 2)
 }
 
-fn is_prime(n: i32) -> bool {
+pub fn is_prime(n: i128) -> bool {
   smallest_divisor(n) == n
 }
 
-fn expmod(base: i32, exp: i32, m: i32) -> i32 {
+pub fn expmod(base: i128, exp: i128, m: i128) -> i128 {
   if exp == 0 {
     1
   } else {
@@ -351,15 +351,15 @@ fn expmod(base: i32, exp: i32, m: i32) -> i32 {
 }
 
 // Fermat test
-fn fermat_test(n: i32) -> bool {
-  fn try_it(a: i32, n: i32) -> bool {
+pub fn fermat_test(n: i128) -> bool {
+  fn try_it(a: i128, n: i128) -> bool {
     expmod(a, n, n) == a
   }
   let mut rng = rand::thread_rng();
   try_it(rng.gen_range(2, n), n)
 }
 
-fn fast_is_prime(n: i32, times: i32) -> bool {
+pub fn fast_is_prime(n: i128, times: i128) -> bool {
   if times == 0 {
     true
   } else {
@@ -371,27 +371,53 @@ fn fast_is_prime(n: i32, times: i32) -> bool {
   }
 }
 
-fn timed_prime_test(n: i32) -> bool {
+// Exercise 1.22
+fn timed_prime_test(n: i128) -> bool {
   println!(" start testing: {}", n);
   let now = SystemTime::now();
   start_prime_test(n, now)
 }
 
-fn start_prime_test(n: i32, now: SystemTime) -> bool {
+fn start_prime_test(n: i128, now: SystemTime) -> bool {
   if is_prime(n) {
-    report_prime(now)
+    report_prime(now, n)
   } else {
     true
   }
 }
 
-fn report_prime(now: SystemTime) -> bool {
+fn report_prime(now: SystemTime, n: i128) -> bool {
   println!(" *** ");
+  println!(" prime number is:  {}", n);
+  println!("Time used: {}", get_lapsed_time_millis(now));
+  /*
   match now.elapsed() {
-    Ok(elapsed) => println!("Time used: {}", elapsed.as_secs() * 1000),
+    Ok(elapsed) => println!("Time used: {}", elapsed.as_millis()),
     Err(e) => println!("Error: {:?}", e),
   }
+  */
   false
+}
+
+fn get_lapsed_time_millis(then: SystemTime) -> u128 {
+  let new_now = SystemTime::now();
+  new_now.duration_since(UNIX_EPOCH).expect("Time").as_millis() - then.duration_since(UNIX_EPOCH).expect("Time").as_millis()
+}
+
+// start is odd number
+fn search_for_prime(start: i128, count: i128) {
+  fn helper(start: i128, count: i128) {
+    if count == 0 {
+      return
+    } else {
+      if timed_prime_test(start) {
+        helper(start + 2, count)
+      } else {
+        helper(start + 2, count - 1)
+      }
+    }
+  }
+  helper(start, count)
 }
 
 #[test]
@@ -429,4 +455,10 @@ fn functions_and_their_processes_tests() {
   println!("{}", is_prime(5));
   println!("{}", fermat_test(5));
   println!("{}", timed_prime_test(16769023));
+  search_for_prime(1111, 3);
+  search_for_prime(11111, 3);
+  search_for_prime(111111, 3);
+  search_for_prime(1111111, 3);
+  search_for_prime(11111111, 3);
+  search_for_prime(111111111, 3);
 }
