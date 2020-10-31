@@ -357,7 +357,9 @@ pub fn fermat_test(n: i128) -> bool {
     expmod(a, n, n) == a
   }
   let mut rng = rand::thread_rng();
-  try_it(rng.gen_range(2, n), n)
+  let a = rng.gen_range(1, n);
+  println!("fermat_test testing {}", a);
+  try_it(a, n)
 }
 
 pub fn fast_is_prime(n: i128, times: i128) -> bool {
@@ -434,6 +436,55 @@ fn test_carmichael_number(n: i128) {
   }
 }
 
+// Exercise 1.28 Miller-Rabin test
+fn miller_rabin_test(n: i128, times: i128) -> bool {
+  fn expmod(base: i128, exp: i128, m: i128) -> i128 {
+    if exp == 0 {
+      1
+    } else {
+      if is_even(exp) {
+        // square after expmod, otherwise it will overflow easily
+        square(expmod(base, half(exp), m)) % m
+      } else {
+        base * expmod(base, exp - 1, m) % m
+      }
+    }
+  }
+
+  fn trivial_test(r: i128, m: i128) -> i128 {
+    if r == 1 || r == m - 1 {
+      r
+    } else if square(r) % m == 1 {
+      0
+    } else {
+      r
+    }
+  }
+
+  fn helper_test(n: i128) -> bool {
+    fn try_it(a: i128, n: i128) -> bool {
+      expmod(a, n - 1, n) == 1
+    }
+    let mut rng = rand::thread_rng();
+    let a = rng.gen_range(1, n - 1);
+    println!("miller_rabin testing {}", a);
+    try_it(a, n)
+  }
+
+  fn test_times(n: i128, times: i128) -> bool {
+    if times == 0 {
+      true
+    } else {
+      if helper_test(n) {
+        test_times(n, times - 1)
+      } else {
+        false
+      }
+    }
+  }
+  test_times(n, times)
+}
+
 #[test]
 fn functions_and_their_processes_tests() {
   println!("{}", factorial(5));
@@ -477,4 +528,9 @@ fn functions_and_their_processes_tests() {
   search_for_prime(111111111, 3);
   // carmichael number
   test_carmichael_number(2821);
+  println!("is 2821 prime by fermat_test? {}", fast_is_prime(2821, 100));
+  println!(
+    "is 2821 prime by miller_rabin test? {}",
+    miller_rabin_test(2821, 100)
+  );
 }
