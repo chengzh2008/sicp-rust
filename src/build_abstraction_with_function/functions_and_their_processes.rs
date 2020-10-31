@@ -343,7 +343,8 @@ pub fn expmod(base: i128, exp: i128, m: i128) -> i128 {
     1
   } else {
     if is_even(exp) {
-      expmod(square(base), half(exp), m) % m
+      // square after expmod, otherwise it will overflow easily
+      square(expmod(base, half(exp), m)) % m
     } else {
       base * expmod(base, exp - 1, m) % m
     }
@@ -401,14 +402,18 @@ fn report_prime(now: SystemTime, n: i128) -> bool {
 
 fn get_lapsed_time_millis(then: SystemTime) -> u128 {
   let new_now = SystemTime::now();
-  new_now.duration_since(UNIX_EPOCH).expect("Time").as_millis() - then.duration_since(UNIX_EPOCH).expect("Time").as_millis()
+  new_now
+    .duration_since(UNIX_EPOCH)
+    .expect("Time")
+    .as_millis()
+    - then.duration_since(UNIX_EPOCH).expect("Time").as_millis()
 }
 
 // start is odd number
 fn search_for_prime(start: i128, count: i128) {
   fn helper(start: i128, count: i128) {
     if count == 0 {
-      return
+      return;
     } else {
       if timed_prime_test(start) {
         helper(start + 2, count)
@@ -418,6 +423,15 @@ fn search_for_prime(start: i128, count: i128) {
     }
   }
   helper(start, count)
+}
+
+// Exercise 1.27
+fn test_carmichael_number(n: i128) {
+  for i in 2..n {
+    if expmod(i, n, n) == i {
+      println!(" testing {}", i);
+    }
+  }
 }
 
 #[test]
@@ -461,4 +475,6 @@ fn functions_and_their_processes_tests() {
   search_for_prime(1111111, 3);
   search_for_prime(11111111, 3);
   search_for_prime(111111111, 3);
+  // carmichael number
+  test_carmichael_number(2821);
 }
