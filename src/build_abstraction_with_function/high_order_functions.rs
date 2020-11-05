@@ -1,6 +1,6 @@
 extern crate num;
 
-use crate::build_abstraction_with_function::functions_and_their_processes::inc;
+use crate::build_abstraction_with_function::functions_and_their_processes::{inc, is_prime};
 
 use num::{Num, PrimInt, Unsigned};
 use std::iter::Product;
@@ -174,6 +174,30 @@ pub fn accumulate_iter(
   helper(combiner, null_value, &term, a, next, b, null_value)
 }
 
+// Exercise 1.33
+// generalize accululate
+pub fn filtered_accumulate(
+  combiner: &impl Fn(f64, f64) -> f64,
+  null_value: f64,
+  predicate: impl Fn(i128) -> bool,
+  term: impl Fn(i128) -> f64,
+  a: i128,
+  next: impl Fn(i128) -> i128,
+  b: i128,
+) -> f64 {
+  if a > b {
+    null_value
+  } else {
+    if predicate(a) {
+      combiner(
+        term(a),
+        filtered_accumulate(combiner, null_value, predicate, term, next(a), next, b),
+      )
+    } else {
+      filtered_accumulate(combiner, null_value, predicate, term, next(a), next, b)
+    }
+  }
+}
 pub fn sum_f(term: impl Fn(f64) -> f64, a: f64, next: impl Fn(f64) -> f64, b: f64) -> f64 {
   if a > b {
     0.0
@@ -219,6 +243,18 @@ fn high_order_functions_tests() {
     sum_iter(&cube_fn, 1, inc, 10)
   );
   println!("sum of cube of 1..10 {}", sum(cube_fn, 1, inc, 10));
+  println!(
+    "sum of square of prime of 1..10 {}",
+    filtered_accumulate(
+      &|a, b| a + b,
+      0.0,
+      is_prime,
+      |i| (i * i) as f64,
+      1,
+      |i| i + 1,
+      10
+    )
+  );
   println!(
     "sum of cube of 1..10 using iter {}",
     sum_iter(&cube_fn, 1, inc, 10)
