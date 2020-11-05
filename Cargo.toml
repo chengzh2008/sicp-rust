@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 rand = "0.7.3"
+recur-fn = "2.2"
 
 [dependencies.num]
 version = "0.3"

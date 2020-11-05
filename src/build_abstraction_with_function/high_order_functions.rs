@@ -1,6 +1,6 @@
 extern crate num;
 
-use crate::build_abstraction_with_function::functions_and_their_processes::{inc, is_prime};
+use crate::build_abstraction_with_function::functions_and_their_processes::{gcd, inc, is_prime};
 
 use num::{Num, PrimInt, Unsigned};
 use std::iter::Product;
@@ -253,6 +253,18 @@ fn high_order_functions_tests() {
       1,
       |i| i + 1,
       10
+    )
+  );
+  println!(
+    "product of all positive integers 1..11 that are relatively prime to 11 {}",
+    filtered_accumulate(
+      &|a, b| a * b,
+      1.0,
+      |i| gcd(i, 11) == 1,
+      |i| i as f64,
+      1,
+      |i| i + 1,
+      11
     )
   );
   println!(

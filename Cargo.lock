@@ -153,11 +153,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "recur-fn"
+version = "2.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ddb239d0574f3f7a7f44da906a0484f1fc284f89cfbc4eca1895420dbf948201"
+
+[[package]]
 name = "sicp-rust"
 version = "0.1.0"
 dependencies = [
  "num",
  "rand",
+ "recur-fn",
 ]
 
 [[package]]
