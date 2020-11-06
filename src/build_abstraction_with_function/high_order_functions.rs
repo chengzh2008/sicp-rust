@@ -1,6 +1,7 @@
 extern crate num;
 
 use crate::build_abstraction_with_function::functions_and_their_processes::{gcd, inc, is_prime};
+use recur_fn::{recur_fn, RecurFn};
 
 use num::{Num, PrimInt, Unsigned};
 use std::iter::Product;
@@ -59,21 +60,15 @@ pub fn sum(term: impl Fn(i128) -> f64, a: i128, next: impl Fn(i128) -> i128, b: 
 // pass function or closure as reference to avoid "move" compile issue
 // Exercise 1.30
 pub fn sum_iter(term: &impl Fn(i128) -> f64, a: i128, next: impl Fn(i128) -> i128, b: i128) -> f64 {
-  fn helper(
-    term: &impl Fn(i128) -> f64,
-    a: i128,
-    next: impl Fn(i128) -> i128,
-    b: i128,
-    sum_state: f64,
-  ) -> f64 {
+  let helper = recur_fn(|helper, (a, sum_state)| {
     if a > b {
       sum_state
     } else {
-      helper(term, next(a), next, b, term(a) + sum_state)
+      helper((next(a), term(a) + sum_state))
     }
-  }
+  });
 
-  helper(term, a, next, b, 0.0)
+  helper.call((a, 0.0))
 }
 
 pub fn product(term: impl Fn(i128) -> f64, a: i128, next: impl Fn(i128) -> i128, b: i128) -> f64 {
@@ -90,21 +85,15 @@ pub fn product_iter(
   next: impl Fn(i128) -> i128,
   b: i128,
 ) -> f64 {
-  fn helper(
-    term: &impl Fn(i128) -> f64,
-    a: i128,
-    next: impl Fn(i128) -> i128,
-    b: i128,
-    product_state: f64,
-  ) -> f64 {
+  let helper = recur_fn(|helper, (a, product_state)| {
     if a > b {
       product_state
     } else {
-      helper(term, next(a), next, b, term(a) * product_state)
+      helper((next(a), term(a) * product_state))
     }
-  }
+  });
 
-  helper(&term, a, next, b, 1.0)
+  helper.call((a, 1.0))
 }
 
 pub fn factorial_by_product(n: i128) -> f64 {
@@ -147,31 +136,15 @@ pub fn accumulate_iter(
   next: impl Fn(i128) -> i128,
   b: i128,
 ) -> f64 {
-  fn helper(
-    combiner: &impl Fn(f64, f64) -> f64,
-    null_value: f64,
-    term: &impl Fn(i128) -> f64,
-    a: i128,
-    next: impl Fn(i128) -> i128,
-    b: i128,
-    acc_state: f64,
-  ) -> f64 {
+  let helper = recur_fn(|helper, (a, acc_state)| {
     if a > b {
       acc_state
     } else {
-      helper(
-        combiner,
-        null_value,
-        term,
-        next(a),
-        next,
-        b,
-        combiner(term(a), acc_state),
-      )
+      helper((next(a), combiner(term(a), acc_state)))
     }
-  }
+  });
 
-  helper(combiner, null_value, &term, a, next, b, null_value)
+  helper.call((a, null_value))
 }
 
 // Exercise 1.33
