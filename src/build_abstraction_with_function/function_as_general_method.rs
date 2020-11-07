@@ -76,6 +76,43 @@ fn sqrt_by_fixpoint(x: f64) -> f64 {
   fix_point(&|y| average(y, x / y), 1.0, false)
 }
 
+// Exercise 1.37
+fn cont_frac(n_term: &impl Fn(i128) -> f64, d_term: &impl Fn(i128) -> f64, k: i128) -> f64 {
+  let helper = recur_fn(|helper, i| {
+    if i > k {
+      0.0
+    } else {
+      n_term(i) / (d_term(i) + helper(i + 1))
+    }
+  });
+  helper.call(1)
+}
+
+fn cont_frac_iter(n_term: &impl Fn(i128) -> f64, d_term: &impl Fn(i128) -> f64, k: i128) -> f64 {
+  let helper = recur_fn(|helper, (i, acc)| {
+    if i == 0 {
+      acc
+    } else {
+      helper((i - 1, n_term(i) / (d_term(i) + acc)))
+    }
+  });
+  helper.call((k, 0.0))
+}
+
+// Exercise 1.39 Lambert's formula
+fn tan_cf(x: f64, k: i128) -> f64 {
+  let helper = recur_fn(|helper, i| {
+    if i > k {
+      0.0
+    } else {
+      let n = if i == 1 { x } else { x * x };
+      let d = (double(i) - 1) as f64;
+      n / (d - helper((i + 1)))
+    }
+  });
+  helper.call((1))
+}
+
 #[test]
 fn function_as_general_method_tests() {
   println!("apply closure with argument {}", (|i| i + 1)(3));
@@ -116,5 +153,33 @@ fn function_as_general_method_tests() {
       1.1,
       true
     )
-  )
+  );
+  println!("approximate 1/ϕ {}", cont_frac(&|i| 1.0, &|i| 1.0, 1000));
+  println!(
+    "approximate 1/ϕ iterative {}",
+    cont_frac_iter(&|i| 1.0, &|i| 1.0, 1000)
+  );
+  // approximate e
+  println!(
+    "approximate e iterative {}",
+    2.0
+      + cont_frac_iter(
+        &|i| 1.0,
+        &|i| {
+          if i < 3 {
+            i as f64
+          } else {
+            if i % 3 == 2 {
+              (i - i / 3) as f64
+            } else {
+              1.0
+            }
+          }
+        },
+        20
+      )
+  );
+  // Lamber's formula
+  println!("approximate tan(x)  {}", tan_cf(3.0, 100));
+  println!("tan(x)  {}", f64::tan(3.0));
 }
