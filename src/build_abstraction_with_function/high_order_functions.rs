@@ -21,6 +21,20 @@ where
   n * n * n
 }
 
+pub fn double<T>(n: T) -> T
+where
+  T: Num + Copy,
+{
+  n + n
+}
+
+pub fn square<T>(n: T) -> T
+where
+  T: Num + Copy,
+{
+  n * n
+}
+
 fn cube_fn(n: i128) -> f64 {
   (n * n * n) as f64
 }
