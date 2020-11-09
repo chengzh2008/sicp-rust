@@ -7,21 +7,31 @@ fn test_closure(n: i128) -> i128 {
   helper.call((1, 0))
 }
 
-fn average(i: f64, j: f64) -> f64 {
+pub fn average(i: f64, j: f64) -> f64 {
   (i + j) / 2.0
 }
 
-fn close_enough(a: f64, b: f64) -> bool {
+pub fn close_enough(a: f64, b: f64) -> bool {
   let delta = 0.00001;
   f64::abs(a - b) < delta
 }
 
-fn positive(i: f64) -> bool {
+pub fn square(i: f64) -> f64 {
+  i * i
+}
+
+pub fn positive(i: f64) -> bool {
   i > 0.0
 }
 
-fn negative(i: f64) -> bool {
+pub fn negative(i: f64) -> bool {
   i < 0.0
+}
+
+// Function as Returned Values
+pub fn average_damp(f: impl Fn(f64) -> f64) -> impl Fn(f64) -> f64 {
+  let help = move |x| average(x, f(x));
+  help
 }
 
 // finding roots of equations by the half-interval method
@@ -54,7 +64,7 @@ fn half_interval_search(f: impl Fn(f64) -> f64, neg_point: f64, pos_point: f64) 
 }
 
 // fixpoint
-fn fix_point(f: &impl Fn(f64) -> f64, guess: f64, track: bool) -> f64 {
+pub fn fix_point(f: &impl Fn(f64) -> f64, guess: f64, track: bool) -> f64 {
   let helper = recur_fn(|helper, (i, guess)| {
     let r = f(guess);
     if track {
@@ -73,7 +83,12 @@ fn fix_point(f: &impl Fn(f64) -> f64, guess: f64, track: bool) -> f64 {
 fn sqrt_by_fixpoint(x: f64) -> f64 {
   // however this won't converge as next guess y2 = x / y1, next guess y3 = x / y2 = y1
   // fix_point(&|y| x / y, 1.0)
-  fix_point(&|y| average(y, x / y), 1.0, false)
+  fix_point(&average_damp(|y| x / y), 1.0, false)
+}
+
+// cube root by fixpoint and average_damp
+fn cube_root(x: f64) -> f64 {
+  fix_point(&average_damp(|y| x / square(y)), 1.0, false)
 }
 
 // Exercise 1.37
@@ -138,6 +153,11 @@ fn function_as_general_method_tests() {
   );
   // sqrt by fixpoint
   println!("sqrt by fixpoint {}", sqrt_by_fixpoint(2.0));
+  // cube root by fixpoint
+  println!(
+    "cube root by fixpoint with average_damp {}",
+    cube_root(27.0)
+  );
   // golden ratio ϕ
   println!("golden ratio {}", fix_point(&|x| 1.0 + 1.0 / x, 1.0, false));
   // solve x ** x = 1000
@@ -150,6 +170,14 @@ fn function_as_general_method_tests() {
     "solution for x ** x = 1000 with average damping {}",
     fix_point(
       &|x| average(x, f64::log10(1000.0) / f64::log10(x)),
+      1.1,
+      true
+    )
+  );
+  println!(
+    "solution for x ** x = 1000 with average_damp hof {}",
+    fix_point(
+      &average_damp(|x| f64::log10(1000.0) / f64::log10(x)),
       1.1,
       true
     )
