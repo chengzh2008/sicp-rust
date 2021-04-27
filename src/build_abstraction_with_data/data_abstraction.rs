@@ -139,6 +139,20 @@ fn tail_fn<A, B>(z: impl FnOnce(bool) -> AorB<A, B>) -> AorB<A, B> {
   z(false)
 }
 
+// Exercise 2.4 an alternative functional representation
+// TODO: type inference is not enough
+/*
+fn pair_fn2<A, B>(x: A, y: B) -> impl FnOnce(Fn(A, B) -> AorB<A, B>) -> AorB<A, B> {
+  let helper = |m| m(x, y);
+  helper
+}
+
+fn head_fn2<A, B>(z: impl FnOnce(Fn(A, B) -> AorB<A, B>) -> AorB<A, B>) -> A {
+  let helper = |p, q| p;
+  z(helper)
+}
+*/
+
 #[test]
 fn data_abstraction_tests() {
   println!(" rational number {}", make_rat(2, 5));
